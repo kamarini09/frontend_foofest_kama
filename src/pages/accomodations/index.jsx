@@ -12,8 +12,8 @@ import Basket from "@/components/Basket";
 import useRefreshRedirect from "@/hooks/useRefreshRedirect";
 
 export default function Accomodations() {
-  //for redirection to campingsite
-  useRefreshRedirect('/campingsite');
+  //for redirection 
+  useRefreshRedirect('/');
   
   const dispatch = useContext(DispatchContext);
   const state = useContext(StoreContext);

@@ -7,7 +7,8 @@ import useRefreshRedirect from "@/hooks/useRefreshRedirect";
 
 export default function Tickets() {
   const state = useContext(StoreContext);
-  useRefreshRedirect('/campingsite');
+  //for redirection 
+  useRefreshRedirect('/');
 
   return (
     <FlowLayout>

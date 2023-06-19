@@ -8,8 +8,8 @@ import Basket from "@/components/Basket";
 import useRefreshRedirect from "@/hooks/useRefreshRedirect";
 
 export default function Guests() {
-   //for redirection to campingsite
-   useRefreshRedirect('/campingsite');
+   //for redirection 
+  useRefreshRedirect('/');
 
   const state = useContext(StoreContext);
   const [expandedIndex, setExpandedIndex] = useState(0);
