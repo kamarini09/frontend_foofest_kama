@@ -9,8 +9,12 @@ import Timer from "@/components/Timer";
 import CalculateTents from "@/components/CalculateTentss";
 import { v4 as uuidv4 } from "uuid";
 import Basket from "@/components/Basket";
+import useRefreshRedirect from "@/hooks/useRefreshRedirect";
 
 export default function Accomodations() {
+  //for redirection to campingsite
+  useRefreshRedirect('/campingsite');
+  
   const dispatch = useContext(DispatchContext);
   const state = useContext(StoreContext);
 

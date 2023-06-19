@@ -5,8 +5,12 @@ import { useContext, useState } from "react";
 import { StoreContext } from "@/context/storeContext";
 import Timer from "@/components/Timer";
 import Basket from "@/components/Basket";
+import useRefreshRedirect from "@/hooks/useRefreshRedirect";
 
 export default function Guests() {
+   //for redirection to campingsite
+   useRefreshRedirect('/campingsite');
+
   const state = useContext(StoreContext);
   const [expandedIndex, setExpandedIndex] = useState(0);
   // ExpandedIndex represents the index of the accordion that should be expanded. When an accordion is expanded, its index is stored in expandedIndex. The first value is 0, so that the first accordion is always open at the beginning.

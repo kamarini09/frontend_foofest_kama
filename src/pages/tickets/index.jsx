@@ -3,9 +3,11 @@ import FlowLayout from "@/components/FlowLayout";
 import TicketCard from "@/components/TicketCard";
 import { StoreContext } from "@/context/storeContext";
 import Basket from "@/components/Basket";
+import useRefreshRedirect from "@/hooks/useRefreshRedirect";
 
 export default function Tickets() {
   const state = useContext(StoreContext);
+  useRefreshRedirect('/campingsite');
 
   return (
     <FlowLayout>
