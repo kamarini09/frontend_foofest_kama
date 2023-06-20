@@ -2,11 +2,9 @@ import FlowLayout from "@/components/FlowLayout";
 import CreditCardForm from "@/components/CreditCard";
 import Timer from "@/components/Timer";
 import Basket from "@/components/Basket";
-import useRefreshRedirect from "@/hooks/useRefreshRedirect";
+
 
 export default function Payments() {
-   //for redirection 
-  useRefreshRedirect('/');
   
   return (
     <FlowLayout>
