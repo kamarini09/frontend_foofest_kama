@@ -5,11 +5,11 @@ import { useContext, useState } from "react";
 import { StoreContext } from "@/context/storeContext";
 import Timer from "@/components/Timer";
 import Basket from "@/components/Basket";
-import useRefreshRedirect from "@/hooks/useRefreshRedirect";
+// import useRefreshRedirect from "@/hooks/useRefreshRedirect";
 
 export default function Guests() {
    //for redirection 
-  useRefreshRedirect('/');
+  // useRefreshRedirect('/');
 
   const state = useContext(StoreContext);
   const [expandedIndex, setExpandedIndex] = useState(0);
