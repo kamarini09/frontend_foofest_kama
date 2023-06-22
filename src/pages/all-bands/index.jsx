@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Layout from "@/components/Layout";
+import Anchor from "@/components/Anchor";
 
 export default function MondayBands() {
   const [schedule, setSchedule] = useState(null);
@@ -21,6 +22,14 @@ export default function MondayBands() {
       .catch(console.error);
   }, []);
 
+
+  function getSlug(bandName) {
+    return bandName
+      .replace(/[^\w\s]/gi, "")
+      .replace(/\s+/g, "-")
+      .toLowerCase();
+  }
+
   if (schedule === null) {
     return (
       <div className="flex justify-center items-center min-h-screen text-white bg-gradient-to-r from-custom-purple via-custom-yellow to-custom-red">
@@ -38,13 +47,11 @@ export default function MondayBands() {
 
   // Filter out "break" acts
   const filteredActs = [...midgardActs, ...vanaheimActs, ...jotunheimActs].filter(
-    (act) => act.act !== "break"
+    (act) => act.act.toLowerCase() !== "break"
   );
+  
 
-  const handleBandClick = (slug) => {
-    router.push(`/band/${slug}`);
-  };
-
+ 
   return (
     <Layout>
       <section className="flex flex-col justify-between px-10 h-full">
@@ -71,11 +78,11 @@ export default function MondayBands() {
               return null; // Skip rendering the bands with larger font sizes here
             }
 
-            const slug = encodeURIComponent(act.act);
-
-            return (
+          return (
               <div key={index} className={`cursor-pointer ${textStyle} my-2`}>
-                <a onClick={() => handleBandClick(slug)}>{act.act}</a>
+                 <a href={`/bands/${getSlug(act.act)}`}>
+                   {act.act}
+                 </a>
               </div>
             );
           })}
@@ -91,11 +98,12 @@ export default function MondayBands() {
               return null; // Skip rendering the bands with larger font sizes here
             }
 
-            const slug = encodeURIComponent(act.act);
-
+           
             return (
               <div key={index} className={`cursor-pointer ${textStyle} my-2`}>
-                <a onClick={() => handleBandClick(slug)}>{act.act}</a>
+                <a href={`/bands/${getSlug(act.act)}`}>
+                   {act.act}
+                 </a>
               </div>
             );
           })}
