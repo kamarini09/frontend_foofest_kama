@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import Layout from "@/components/Layout";
 
 export default function MondayBands() {
   const [schedule, setSchedule] = useState(null);
+  const router = useRouter();
 
   useEffect(() => {
     // Fetch schedule
@@ -39,6 +41,10 @@ export default function MondayBands() {
     (act) => act.act !== "break"
   );
 
+  const handleBandClick = (slug) => {
+    router.push(`/band/${slug}`);
+  };
+
   return (
     <Layout>
       <section className="flex flex-col justify-between px-10 h-full">
@@ -52,46 +58,49 @@ export default function MondayBands() {
         </div>
       </section>
       <section className="container mx-auto p-4 text-center">
-  <div className="text-center">
-    {filteredActs.map((act, index) => {
-      let textStyle;
+        <div className="text-center">
+          {filteredActs.map((act, index) => {
+            let textStyle;
 
-      // Check the index and set the textStyle accordingly
-      if (index < 6) {
-        textStyle = "text-5xl font-bold"; // Large
-      } else if (index < 12) {
-        textStyle = "text-2xl"; // Smaller
-      } else {
-        return null; // Skip rendering the bands with larger font sizes here
-      }
+            // Check the index and set the textStyle accordingly
+            if (index < 6) {
+              textStyle = "text-5xl font-bold"; // Large
+            } else if (index < 12) {
+              textStyle = "text-2xl"; // Smaller
+            } else {
+              return null; // Skip rendering the bands with larger font sizes here
+            }
 
-      return (
-        <div key={index} className={`cursor-pointer ${textStyle} my-2`}>
-          <a href={`/band/${act.slug}`}>{act.act}</a>
+            const slug = encodeURIComponent(act.act);
+
+            return (
+              <div key={index} className={`cursor-pointer ${textStyle} my-2`}>
+                <a onClick={() => handleBandClick(slug)}>{act.act}</a>
+              </div>
+            );
+          })}
         </div>
-      );
-    })}
-  </div>
-  <div className="text-center">
-    {filteredActs.map((act, index) => {
-      let textStyle;
+        <div className="text-center">
+          {filteredActs.map((act, index) => {
+            let textStyle;
 
-      // Check the index and set the textStyle accordingly
-      if (index >= 12) {
-        textStyle = "text-lg"; // Smallest
-      } else {
-        return null; // Skip rendering the bands with larger font sizes here
-      }
+            // Check the index and set the textStyle accordingly
+            if (index >= 12) {
+              textStyle = "text-lg"; // Smallest
+            } else {
+              return null; // Skip rendering the bands with larger font sizes here
+            }
 
-      return (
-        <div key={index} className={`cursor-pointer ${textStyle} my-2`}>
-          <a href={`/band/${act.slug}`}>{act.act}</a>
+            const slug = encodeURIComponent(act.act);
+
+            return (
+              <div key={index} className={`cursor-pointer ${textStyle} my-2`}>
+                <a onClick={() => handleBandClick(slug)}>{act.act}</a>
+              </div>
+            );
+          })}
         </div>
-      );
-    })}
-  </div>
-</section>
-
+      </section>
     </Layout>
   );
 }
