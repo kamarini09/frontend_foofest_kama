@@ -39,9 +39,6 @@ export default function MondayBands() {
     (act) => act.act !== "break"
   );
 
-  // Calculate the maximum number of acts per row
-  const maxActsPerRow = 12;
-
   return (
     <Layout>
       <section className="flex flex-col justify-between px-10 h-full">
@@ -55,25 +52,46 @@ export default function MondayBands() {
         </div>
       </section>
       <section className="container mx-auto p-4 text-center">
-        <div className="flex flex-wrap justify-center">
-          {filteredActs.map((act, index) => {
-            let size = "text-lg";
-            if (index < 2) {
-              size = "text-2xl";
-            } else if (index < 4) {
-              size = "text-xl";
-            }
-            return (
-              <div
-                key={index}
-                className={`cursor-pointer ${size} w-1/${maxActsPerRow} py-2`}
-              >
-                {act.act}
-              </div>
-            );
-          })}
+  <div className="text-center">
+    {filteredActs.map((act, index) => {
+      let textStyle;
+
+      // Check the index and set the textStyle accordingly
+      if (index < 6) {
+        textStyle = "text-5xl font-bold"; // Large
+      } else if (index < 12) {
+        textStyle = "text-2xl"; // Smaller
+      } else {
+        return null; // Skip rendering the bands with larger font sizes here
+      }
+
+      return (
+        <div key={index} className={`cursor-pointer ${textStyle} my-2`}>
+          <a href={`/band/${act.slug}`}>{act.act}</a>
         </div>
-      </section>
+      );
+    })}
+  </div>
+  <div className="text-center">
+    {filteredActs.map((act, index) => {
+      let textStyle;
+
+      // Check the index and set the textStyle accordingly
+      if (index >= 12) {
+        textStyle = "text-lg"; // Smallest
+      } else {
+        return null; // Skip rendering the bands with larger font sizes here
+      }
+
+      return (
+        <div key={index} className={`cursor-pointer ${textStyle} my-2`}>
+          <a href={`/band/${act.slug}`}>{act.act}</a>
+        </div>
+      );
+    })}
+  </div>
+</section>
+
     </Layout>
   );
 }
