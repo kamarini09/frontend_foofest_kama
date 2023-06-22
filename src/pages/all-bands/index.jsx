@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
-import Anchor from "@/components/Anchor";
 import Layout from "@/components/Layout";
 
-export default function AllBands() {
-  const [bands, setBands] = useState(null);
-  const [loading, setLoading] = useState(true);
+export default function MondayBands() {
+  const [schedule, setSchedule] = useState(null);
 
   useEffect(() => {
-    fetch("https://brazen-fortune-fight.glitch.me/bands")
+    // Fetch schedule
+    fetch("https://brazen-fortune-fight.glitch.me/schedule")
       .then((response) => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -15,15 +14,12 @@ export default function AllBands() {
         return response.json();
       })
       .then((data) => {
-        setTimeout(() => {
-          setBands(data);
-          setLoading(false);
-        }, 1200);
+        setSchedule(data);
       })
       .catch(console.error);
   }, []);
 
-  if (bands === null) {
+  if (schedule === null) {
     return (
       <div className="flex justify-center items-center min-h-screen text-white bg-gradient-to-r from-custom-purple via-custom-yellow to-custom-red">
         <span className="animate-bounce200 text-8xl">.</span>
@@ -33,52 +29,47 @@ export default function AllBands() {
     );
   }
 
+  // Get acts playing on Monday in Midgard, Vanaheim, and Jotunheim
+  const midgardActs = schedule.Midgard.mon;
+  const vanaheimActs = schedule.Vanaheim.mon;
+  const jotunheimActs = schedule.Jotunheim.mon;
+
+  // Filter out "break" acts
+  const filteredActs = [...midgardActs, ...vanaheimActs, ...jotunheimActs].filter(
+    (act) => act.act !== "break"
+  );
+
+  // Calculate the maximum number of acts per row
+  const maxActsPerRow = 12;
+
   return (
     <Layout>
       <section className="flex flex-col justify-between px-10 h-full">
         <div>
           <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white py-4 pt-10 mt-[5rem]">
-            Discover our Line-up
+            Bands Playing on Monday
           </h1>
           <h2 className="text-2xl md:text-2xl text-white font-light pb-10 w-full lg:w-1/2">
-            FooFest Extravaganza offers distinct music, each band with its own
-            unique atmosphere. Here you can see our full line-up for 2023.
+            Here are the bands that are playing on Monday in Midgard, Vanaheim, and Jotunheim.
           </h2>
         </div>
       </section>
       <section className="container mx-auto p-4 text-center">
-        <div className="grid grid-cols-12 gap-4 text-center items-center">
-          {bands.map((band, index) => {
-            let textStyle;
-            let gridColumn;
-
-            // Check the index and set the textStyle accordingly
-            if (index < 1) {
-              textStyle = "text-5xl font-bold text-center"; // large
-              gridColumn = "span 12";
-            } else if (index < 16) {
-              textStyle = "text-4xl font-medium"; // medium
-              gridColumn = "span 4";
-            } else if (index < 28) {
-              textStyle = "text-3xl"; // smaller
-              gridColumn = "span 3"; // spans 1 column
-            } else if (index < 50) {
-              textStyle = "text-1xl"; // normal
-              gridColumn = "span 2"; // spans 1 column
-            } else {
-              textStyle = "text-1xl"; // normal
-              gridColumn = "span 1"; // spans 1 column
+        <div className="flex flex-wrap justify-center">
+          {filteredActs.map((act, index) => {
+            let size = "text-lg";
+            if (index < 2) {
+              size = "text-2xl";
+            } else if (index < 4) {
+              size = "text-xl";
             }
-
             return (
-              <a
-                href={`/bands/${band.slug}`}
-                key={band.name}
-                className={`text-white p-4 ${textStyle}`}
-                style={{ gridColumn }} // apply gridColumn value here
+              <div
+                key={index}
+                className={`cursor-pointer ${size} w-1/${maxActsPerRow} py-2`}
               >
-                <h2 className="text-center">{band.name}</h2>
-              </a>
+                {act.act}
+              </div>
             );
           })}
         </div>
