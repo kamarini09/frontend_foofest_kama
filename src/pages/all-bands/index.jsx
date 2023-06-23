@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import Layout from "@/components/Layout";
 import Anchor from "@/components/Anchor";
 
-export default function MyPage() {
+export default function Lineup() {
   const [schedule, setSchedule] = useState(null);
   const [bands, setBands] = useState(null);
   const router = useRouter();
