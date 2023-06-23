@@ -5,6 +5,7 @@ import Anchor from "@/components/Anchor";
 
 export default function MondayBands() {
   const [schedule, setSchedule] = useState(null);
+  const [bands, setBands] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -20,17 +21,22 @@ export default function MondayBands() {
         setSchedule(data);
       })
       .catch(console.error);
+
+    // Fetch bands
+    fetch("https://brazen-fortune-fight.glitch.me/bands")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setBands(data);
+      })
+      .catch(console.error);
   }, []);
 
-
-  function getSlug(bandName) {
-    return bandName
-      .replace(/[^\w\s]/gi, "")
-      .replace(/\s+/g, "-")
-      .toLowerCase();
-  }
-
-  if (schedule === null) {
+  if (schedule === null || bands === null) {
     return (
       <div className="flex justify-center items-center min-h-screen text-white bg-gradient-to-r from-custom-purple via-custom-yellow to-custom-red">
         <span className="animate-bounce200 text-8xl">.</span>
@@ -40,18 +46,22 @@ export default function MondayBands() {
     );
   }
 
-  // Get acts playing on Monday in Midgard, Vanaheim, and Jotunheim
   const midgardActs = schedule.Midgard.mon;
   const vanaheimActs = schedule.Vanaheim.mon;
   const jotunheimActs = schedule.Jotunheim.mon;
 
-  // Filter out "break" acts
-  const filteredActs = [...midgardActs, ...vanaheimActs, ...jotunheimActs].filter(
-    (act) => act.act.toLowerCase() !== "break"
-  );
-  
+  const filteredActs = [
+    ...midgardActs,
+    ...vanaheimActs,
+    ...jotunheimActs
+  ].filter((act) => act.act.toLowerCase() !== "break");
 
- 
+  const bandNames = bands
+    .filter((band) =>
+      filteredActs.some((act) => act.act.toLowerCase() === band.name.toLowerCase())
+    )
+    .map((band) => band.name);
+
   return (
     <Layout>
       <section className="flex flex-col justify-between px-10 h-full">
@@ -65,49 +75,34 @@ export default function MondayBands() {
         </div>
       </section>
       <section className="container mx-auto p-4 text-center">
-        <div className="text-center">
-          {filteredActs.map((act, index) => {
-            let textStyle;
+        <section className="container mx-auto p-4 text-center">
+          <div className="text-center">
+            {bandNames.map((name, index) => {
+              const band = bands.find((band) => band.name.toLowerCase() === name.toLowerCase());
 
-            // Check the index and set the textStyle accordingly
-            if (index < 6) {
-              textStyle = "text-5xl font-bold"; // Large
-            } else if (index < 12) {
-              textStyle = "text-2xl"; // Smaller
-            } else {
-              return null; // Skip rendering the bands with larger font sizes here
-            }
+              if (!band) {
+                return null;
+              }
 
-          return (
-              <div key={index} className={`cursor-pointer ${textStyle} my-2`}>
-                 <a href={`/bands/${getSlug(act.act)}`}>
-                   {act.act}
-                 </a>
-              </div>
-            );
-          })}
-        </div>
-        <div className="text-center">
-          {filteredActs.map((act, index) => {
-            let textStyle;
+              let textStyle;
+              if (index < 4) {
+                textStyle = "text-5xl font-bold";
+              } else if (index < 12) {
+                textStyle = "text-2xl font-bold";
+              } else {
+                textStyle = "text-lg";
+              }
 
-            // Check the index and set the textStyle accordingly
-            if (index >= 12) {
-              textStyle = "text-lg"; // Smallest
-            } else {
-              return null; // Skip rendering the bands with larger font sizes here
-            }
-
-           
-            return (
-              <div key={index} className={`cursor-pointer ${textStyle} my-2`}>
-                <a href={`/bands/${getSlug(act.act)}`}>
-                   {act.act}
-                 </a>
-              </div>
-            );
-          })}
-        </div>
+              return (
+                <div key={index} className={`cursor-pointer ${textStyle} my-2`}>
+                  <a href={`/bands/${band.slug}`}>
+                    {name}
+                  </a>
+                </div>
+              );
+            })}
+          </div>
+        </section>
       </section>
     </Layout>
   );
